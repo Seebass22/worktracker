@@ -24,9 +24,7 @@ def to_time_string(seconds):
     return outstring
 
 
-def today(json_file):
-    current_date = datetime.datetime.now().strftime('%Y-%m-%d')
-
+def summarize_day(json_file, date_string):
     if os.path.isfile(json_file):
         with open(json_file, 'r') as infile:
             data = json.load(infile)
@@ -34,11 +32,11 @@ def today(json_file):
         print('no history file')
         return
 
-    if current_date not in data:
-        print('nothing today')
+    if date_string not in data:
+        print('no work')
         return
 
-    today = data[current_date]
+    today = data[date_string]
     total_seconds = 0
 
     for activity, seconds in today.items():
@@ -48,3 +46,8 @@ def today(json_file):
 
     total_string = to_time_string(total_seconds)
     print(f'\ntotal: {total_string}')
+
+
+def today(json_file):
+    current_date = datetime.datetime.now().strftime('%Y-%m-%d')
+    summarize_day(json_file, current_date)

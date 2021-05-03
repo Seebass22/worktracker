@@ -106,6 +106,8 @@ class homework_tracker:
                            action='store_true')
         group.add_argument('--today', help='display work done today',
                            action='store_true')
+        group.add_argument('--date', help='display work done on specific date,\
+                           YYYY-MM-DD format')
         args = parser.parse_args()
 
         if args.start is not None:
@@ -114,6 +116,8 @@ class homework_tracker:
             self.stop()
         elif args.today:
             history.today(self.json_file)
+        elif args.date is not None:
+            history.summarize_day(self.json_file, args.date)
         else:
             self.status()
 
