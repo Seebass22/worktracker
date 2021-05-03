@@ -4,17 +4,19 @@ import os.path
 import time
 
 import json_exporter
+import history
 
 
 class homework_tracker:
     def __init__(self, status_file='status.txt', json_file='history.json'):
-        self.statusfile = status_file
+        self.status_file = status_file
+        self.json_file = json_file
         self.exporter = json_exporter.json_exporter(json_file)
 
     def write_time(self, activity):
         current_time = int(time.time())
 
-        f = open(self.statusfile, 'w')
+        f = open(self.status_file, 'w')
         f.write('started\n')
         f.write(str(current_time))
         f.write('\n')
@@ -26,8 +28,8 @@ class homework_tracker:
         f.close()
 
     def start(self, activity):
-        if os.path.isfile(self.statusfile):
-            with open(self.statusfile) as f:
+        if os.path.isfile(self.status_file):
+            with open(self.status_file) as f:
                 data = f.readlines()
 
             if data[0] == 'started\n':
@@ -53,7 +55,7 @@ class homework_tracker:
                 self.exporter.update_json_file('default', time_difference)
                 print(f'worked for {time_difference} seconds')
 
-            with open(self.statusfile, 'w') as f:
+            with open(self.status_file, 'w') as f:
                 f.write('stopped\n')
 
         else:
@@ -65,8 +67,8 @@ class homework_tracker:
         activity = None
         time_difference = 0
 
-        if os.path.isfile(self.statusfile):
-            with open(self.statusfile, 'r') as f:
+        if os.path.isfile(self.status_file):
+            with open(self.status_file, 'r') as f:
                 data = f.readlines()
 
             if data[0] == 'started\n':
@@ -102,12 +104,16 @@ class homework_tracker:
 
         group.add_argument('--status', help='display status',
                            action='store_true')
+        group.add_argument('--today', help='display work done today',
+                           action='store_true')
         args = parser.parse_args()
 
         if args.start is not None:
             self.start(args.start)
         elif args.stop:
             self.stop()
+        elif args.today:
+            history.today(self.json_file)
         else:
             self.status()
 
