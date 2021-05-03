@@ -3,6 +3,8 @@ import argparse
 import os.path
 import time
 
+import json_exporter
+
 statusfile = 'status.txt'
 
 
@@ -46,7 +48,9 @@ def stop():
     if time_difference:
         if activity:
             print(f'worked on {activity} for {time_difference} seconds')
+            json_exporter.update_json_file(activity, time_difference)
         else:
+            json_exporter.update_json_file('default', time_difference)
             print(f'worked for {time_difference} seconds')
 
         with open(statusfile, 'w') as f:
