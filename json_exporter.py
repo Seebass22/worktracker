@@ -9,20 +9,19 @@ def update_json_file(activity, time_difference):
 
     if os.path.isfile(json_file):
         with open(json_file, 'r') as infile:
-            a = json.load(infile)
+            data = json.load(infile)
     else:
-        a = dict()
+        data = dict()
 
-    if current_date in a:
-        if activity in a[current_date]:
-            past_time = int(a[current_date][activity])
+    if current_date in data:
+        if activity in data[current_date]:
+            past_time = int(data[current_date][activity])
             new_time = past_time + time_difference
-            a[current_date][activity] = new_time
+            data[current_date][activity] = new_time
         else:
-            a[current_date][activity] = time_difference
+            data[current_date][activity] = time_difference
     else:
-        a[current_date] = { activity: time_difference }
-
+        data[current_date] = { activity: time_difference }
 
     with open(json_file, 'w') as output:
-        json.dump(a, output, indent=4)
+        json.dump(data, output, indent=4)
