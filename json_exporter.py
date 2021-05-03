@@ -2,26 +2,30 @@ import json
 import os.path
 import datetime
 
-def update_json_file(activity, time_difference):
-    json_file = 'history.json'
 
-    current_date = datetime.datetime.now().strftime('%Y-%m-%d')
+class json_exporter:
+    def __init__(self, json_file='history.json'):
+        self.json_file = json_file
 
-    if os.path.isfile(json_file):
-        with open(json_file, 'r') as infile:
-            data = json.load(infile)
-    else:
-        data = dict()
+    def update_json_file(self, activity, time_difference):
 
-    if current_date in data:
-        if activity in data[current_date]:
-            past_time = int(data[current_date][activity])
-            new_time = past_time + time_difference
-            data[current_date][activity] = new_time
+        current_date = datetime.datetime.now().strftime('%Y-%m-%d')
+
+        if os.path.isfile(self.json_file):
+            with open(self.json_file, 'r') as infile:
+                data = json.load(infile)
         else:
-            data[current_date][activity] = time_difference
-    else:
-        data[current_date] = { activity: time_difference }
+            data = dict()
 
-    with open(json_file, 'w') as output:
-        json.dump(data, output, indent=4)
+        if current_date in data:
+            if activity in data[current_date]:
+                past_time = int(data[current_date][activity])
+                new_time = past_time + time_difference
+                data[current_date][activity] = new_time
+            else:
+                data[current_date][activity] = time_difference
+        else:
+            data[current_date] = {activity: time_difference}
+
+        with open(self.json_file, 'w') as output:
+            json.dump(data, output, indent=4)
