@@ -1,6 +1,6 @@
 import json
 import os.path
-import datetime
+from datetime import datetime, timedelta
 
 def to_time_string(seconds):
     outstring = ''
@@ -27,27 +27,37 @@ def to_time_string(seconds):
 def summarize_day(json_file, date_string):
     if os.path.isfile(json_file):
         with open(json_file, 'r') as infile:
-            data = json.load(infile)
+            try:
+                data = json.load(infile)
+            except json.decoder.JSONDecodeError:
+                return('invalid json file')
+
     else:
-        print('no history file')
-        return
+        return('no history file')
 
     if date_string not in data:
-        print('no work')
-        return
+        return('no work')
 
     today = data[date_string]
     total_seconds = 0
 
+    outstring = ''
     for activity, seconds in today.items():
         total_seconds += seconds
         time_string = to_time_string(seconds)
-        print(f'{activity}: {time_string}')
+        outstring += f'{activity}: {time_string}\n'
 
     total_string = to_time_string(total_seconds)
-    print(f'\ntotal: {total_string}')
+    outstring += f'\ntotal: {total_string}'
+    return outstring
 
 
 def today(json_file):
-    current_date = datetime.datetime.now().strftime('%Y-%m-%d')
-    summarize_day(json_file, current_date)
+    current_date = datetime.now().strftime('%Y-%m-%d')
+    return summarize_day(json_file, current_date)
+
+
+def yesterday(json_file):
+    today = datetime.now()
+    yesterday = (today - timedelta(days=1)).strftime('%Y-%m-%d')
+    return summarize_day(json_file, yesterday)
