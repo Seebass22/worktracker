@@ -2,16 +2,27 @@
 import argparse
 import os.path
 import time
+from pathlib import Path
 
 import json_exporter
 import history
 
 
 class homework_tracker:
-    def __init__(self, status_file='status.txt', json_file='history.json'):
-        self.status_file = status_file
-        self.json_file = json_file
-        self.exporter = json_exporter.json_exporter(json_file)
+    def __init__(self, status_file=None, json_file=None):
+        self.init_config()
+
+        if status_file is not None:
+            self.status_file = status_file
+        if json_file is not None:
+            self.json_file = json_file
+        self.exporter = json_exporter.json_exporter(self.json_file)
+
+    def init_config(self):
+        config_path = Path.home() / '.config/homework_tracker'
+        config_path.mkdir(parents=True, exist_ok=True)
+        self.status_file = str(config_path / 'status.txt')
+        self.json_file = str(config_path / 'history.json')
 
     def write_time(self, activity):
         current_time = int(time.time())
