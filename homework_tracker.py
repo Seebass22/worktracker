@@ -48,12 +48,13 @@ class homework_tracker:
     def stop(self):
         time_difference, activity = self.get_status()
         if time_difference:
+            time_string = history.to_time_string(time_difference)
             if activity:
-                print(f'worked on {activity} for {time_difference} seconds')
+                print(f'worked on {activity} for {time_string}')
                 self.exporter.update_json_file(activity, time_difference)
             else:
                 self.exporter.update_json_file('default', time_difference)
-                print(f'worked for {time_difference} seconds')
+                print(f'worked for {time_string}')
 
             with open(self.status_file, 'w') as f:
                 f.write('stopped\n')
@@ -85,10 +86,11 @@ class homework_tracker:
     def status(self):
         time_difference, activity = self.get_status()
         if time_difference:
+            time_string = history.to_time_string(time_difference)
             if activity:
-                print(f'working on {activity} for {time_difference} seconds')
+                print(f'working on {activity} for {time_string}')
             else:
-                print(f'working for {time_difference} seconds')
+                print(f'working for {time_string}')
         else:
             print('stopped')
 
@@ -104,14 +106,19 @@ class homework_tracker:
 
         group.add_argument('--status', help='display status',
                            action='store_true')
+
         group.add_argument('--today', help='display work done today',
                            action='store_true')
+
         group.add_argument('--yesterday', help='display work done yesterday',
                            action='store_true')
+
         group.add_argument('--days-ago', metavar='DAYS', type=int,
                            help='display work done DAYS days ago')
+
         group.add_argument('--date', help='display work done on specific date,\
                            YYYY-MM-DD format')
+
         args = parser.parse_args()
 
         if args.start is not None:
