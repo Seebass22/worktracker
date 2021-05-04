@@ -108,6 +108,8 @@ class homework_tracker:
                            action='store_true')
         group.add_argument('--yesterday', help='display work done yesterday',
                            action='store_true')
+        group.add_argument('--days-ago', metavar='DAYS', type=int,
+                           help='display work done DAYS days ago')
         group.add_argument('--date', help='display work done on specific date,\
                            YYYY-MM-DD format')
         args = parser.parse_args()
@@ -120,6 +122,8 @@ class homework_tracker:
             print(history.today(self.json_file))
         elif args.yesterday:
             print(history.yesterday(self.json_file))
+        elif args.days_ago is not None:
+            print(history.days_ago(self.json_file, args.days_ago))
         elif args.date is not None:
             print(history.summarize_day(self.json_file, args.date))
         else:

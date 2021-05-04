@@ -2,6 +2,7 @@ import json
 import os.path
 from datetime import datetime, timedelta
 
+
 def to_time_string(seconds):
     outstring = ''
     hours = 0
@@ -31,7 +32,6 @@ def summarize_day(json_file, date_string):
                 data = json.load(infile)
             except json.decoder.JSONDecodeError:
                 return('invalid json file')
-
     else:
         return('no history file')
 
@@ -61,3 +61,9 @@ def yesterday(json_file):
     today = datetime.now()
     yesterday = (today - timedelta(days=1)).strftime('%Y-%m-%d')
     return summarize_day(json_file, yesterday)
+
+
+def days_ago(json_file, days):
+    today = datetime.now()
+    date = (today - timedelta(days=days)).strftime('%Y-%m-%d')
+    return summarize_day(json_file, date)
