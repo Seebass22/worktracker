@@ -13,7 +13,11 @@ class json_exporter:
 
         if os.path.isfile(self.json_file):
             with open(self.json_file, 'r') as infile:
-                data = json.load(infile)
+                try:
+                    data = json.load(infile)
+                except json.decoder.JSONDecodeError:
+                    print("invalid json file, couldn't update")
+                    return
         else:
             data = dict()
 
