@@ -1,6 +1,5 @@
 #!/usr/bin/python
 import argparse
-import os.path
 import time
 from pathlib import Path
 
@@ -21,8 +20,8 @@ class homework_tracker:
     def init_config(self):
         config_path = Path.home() / '.config/homework_tracker'
         config_path.mkdir(parents=True, exist_ok=True)
-        self.status_file = str(config_path / 'status.txt')
-        self.json_file = str(config_path / 'history.json')
+        self.status_file = config_path / 'status.txt'
+        self.json_file = config_path / 'history.json'
 
     def write_time(self, activity):
         current_time = int(time.time())
@@ -39,8 +38,8 @@ class homework_tracker:
         f.close()
 
     def start(self, activity):
-        if os.path.isfile(self.status_file):
-            with open(self.status_file) as f:
+        if self.status_file.exists():
+            with self.status_file.open('r') as f:
                 data = f.readlines()
 
             if data[0] == 'started\n':
@@ -79,8 +78,8 @@ class homework_tracker:
         activity = None
         time_difference = 0
 
-        if os.path.isfile(self.status_file):
-            with open(self.status_file, 'r') as f:
+        if self.status_file.exists():
+            with self.status_file.open('r') as f:
                 data = f.readlines()
 
             if data[0] == 'started\n':

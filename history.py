@@ -1,5 +1,4 @@
 import json
-import os.path
 from datetime import datetime, timedelta
 
 
@@ -26,8 +25,8 @@ def to_time_string(seconds):
 
 
 def summarize_day(json_file, date_string):
-    if os.path.isfile(json_file):
-        with open(json_file, 'r') as infile:
+    if json_file.exists():
+        with json_file.open('r') as infile:
             try:
                 data = json.load(infile)
             except json.decoder.JSONDecodeError:

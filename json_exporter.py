@@ -1,5 +1,4 @@
 import json
-import os.path
 import datetime
 
 
@@ -11,8 +10,8 @@ class json_exporter:
 
         current_date = datetime.datetime.now().strftime('%Y-%m-%d')
 
-        if os.path.isfile(self.json_file):
-            with open(self.json_file, 'r') as infile:
+        if self.json_file.exists():
+            with self.json_file.open('r') as infile:
                 try:
                     data = json.load(infile)
                 except json.decoder.JSONDecodeError:
@@ -31,5 +30,5 @@ class json_exporter:
         else:
             data[current_date] = {activity: time_difference}
 
-        with open(self.json_file, 'w') as output:
+        with self.json_file.open('w') as output:
             json.dump(data, output, indent=4)
