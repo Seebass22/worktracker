@@ -35,6 +35,19 @@ def test_valid_test_json_file():
     test_json_file.unlink(missing_ok=True)
 
 
+def test_dos_line_endings():
+    test_json_file = Path('test_dos_line_endings.json')
+    with test_json_file.open('w') as f:
+        f.write('{\r\n    "2021-05-03": {\r\n        "math": 25,\r\n        "python": 20\r\n    }\r\n}\r\n')
+
+    result = history.summarize_day(test_json_file, '2021-05-03')
+
+    expected = 'math: 25s\npython: 20s\n\ntotal: 45s'
+    assert result == expected
+
+    test_json_file.unlink(missing_ok=True)
+
+
 def test_invalid_test_json_file():
     test_json_file = Path('test_invalid_json_file.json')
     with test_json_file.open('w') as f:
