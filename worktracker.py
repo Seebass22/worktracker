@@ -7,7 +7,7 @@ import json_exporter
 import history
 
 
-class homework_tracker:
+class worktracker:
     def __init__(self, status_file=None, json_file=None):
         self.init_config()
 
@@ -18,7 +18,7 @@ class homework_tracker:
         self.exporter = json_exporter.json_exporter(self.json_file)
 
     def init_config(self):
-        config_path = Path.home() / '.config/homework_tracker'
+        config_path = Path.home() / '.config/worktracker'
         config_path.mkdir(parents=True, exist_ok=True)
         self.status_file = config_path / 'status.txt'
         self.json_file = config_path / 'history.json'
@@ -148,5 +148,5 @@ class homework_tracker:
 
 
 if __name__ == '__main__':
-    hw = homework_tracker()
+    hw = worktracker()
     hw.main()
