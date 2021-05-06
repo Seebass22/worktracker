@@ -5,6 +5,7 @@ from pathlib import Path
 
 import json_exporter
 import history
+import merge
 
 
 class worktracker:
@@ -129,6 +130,9 @@ class worktracker:
         group.add_argument('--date', help='display work done on specific date,\
                            YYYY-MM-DD format')
 
+        group.add_argument('--merge', metavar='FILE', help='merge FILE into\
+                           current history file')
+
         args = parser.parse_args()
 
         if args.start is not None:
@@ -143,6 +147,8 @@ class worktracker:
             print(history.days_ago(self.json_file, args.days_ago))
         elif args.date is not None:
             print(history.summarize_day(self.json_file, args.date))
+        elif args.merge is not None:
+            merge.merge_json(self.json_file, Path(args.merge))
         else:
             self.status()
 
