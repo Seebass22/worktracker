@@ -44,11 +44,13 @@ class worktracker:
                 data = f.readlines()
 
             if data[0] == 'started\n':
-                print('already started')
+                return 'already started\n'
             else:
                 self.write_time(activity)
+                return ''
         else:
             self.write_time(activity)
+            return ''
 
     def calculate_time_difference(self, data):
         start_time = int(data[1].rstrip('\n'))
@@ -61,17 +63,18 @@ class worktracker:
         if time_difference:
             time_string = history.to_time_string(time_difference)
             if activity:
-                print(f'worked on {activity} for {time_string}')
                 self.exporter.update_json_file(activity, time_difference)
+                ret = f'worked on {activity} for {time_string}'
             else:
                 self.exporter.update_json_file('default', time_difference)
-                print(f'worked for {time_string}')
+                ret = f'worked for {time_string}'
 
             with open(self.status_file, 'w') as f:
                 f.write('stopped\n')
+            return ret
 
         else:
-            print('already stopped')
+            return 'already stopped'
 
     # return time spent on current task, activity (None if unspecified)
     # return 0, None if stopped
@@ -99,11 +102,11 @@ class worktracker:
         if time_difference:
             time_string = history.to_time_string(time_difference)
             if activity:
-                print(f'working on {activity} for {time_string}')
+                return f'working on {activity} for {time_string}'
             else:
-                print(f'working for {time_string}')
+                return f'working for {time_string}'
         else:
-            print('stopped')
+            return 'stopped'
 
     def main(self):
         parser = argparse.ArgumentParser(description='track your work')
@@ -136,21 +139,28 @@ class worktracker:
         args = parser.parse_args()
 
         if args.start is not None:
-            self.start(args.start)
+            print(self.start(args.start), end='')
+
         elif args.stop:
-            self.stop()
+            print(self.stop())
+
         elif args.today:
             print(history.today(self.json_file))
+
         elif args.yesterday:
             print(history.yesterday(self.json_file))
+
         elif args.days_ago is not None:
             print(history.days_ago(self.json_file, args.days_ago))
+
         elif args.date is not None:
             print(history.summarize_day(self.json_file, args.date))
+
         elif args.merge is not None:
             merge.merge_json(self.json_file, Path(args.merge))
+
         else:
-            self.status()
+            print(self.status())
 
 
 if __name__ == '__main__':
