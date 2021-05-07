@@ -60,9 +60,9 @@ class worktracker:
 
     def stop(self):
         time_difference, activity = self.get_status()
-        if time_difference:
+        if time_difference is not None:
             time_string = history.to_time_string(time_difference)
-            if activity:
+            if activity is not None:
                 self.exporter.update_json_file(activity, time_difference)
                 ret = f'worked on {activity} for {time_string}'
             else:
@@ -77,7 +77,7 @@ class worktracker:
             return 'already stopped'
 
     # return time spent on current task, activity (None if unspecified)
-    # return 0, None if stopped
+    # return None, None if stopped
     def get_status(self):
         activity = None
         time_difference = 0
@@ -91,17 +91,17 @@ class worktracker:
                 if len(data) == 3:
                     activity = data[2].rstrip('\n')
             else:
-                time_difference = 0
+                return None, None
 
             return time_difference, activity
         else:
-            return 0, activity
+            return None, None
 
     def status(self):
         time_difference, activity = self.get_status()
-        if time_difference:
+        if time_difference is not None:
             time_string = history.to_time_string(time_difference)
-            if activity:
+            if activity is not None:
                 return f'working on {activity} for {time_string}'
             else:
                 return f'working for {time_string}'

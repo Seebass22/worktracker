@@ -1,8 +1,9 @@
+#!/usr/bin/python
 import sys
 from PySide6 import QtCore, QtWidgets
 from pathlib import Path
 
-from worktracker import worktracker
+import worktracker
 import history
 
 
@@ -10,15 +11,11 @@ class MyWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
-        json_file = Path('gui_history.json')
-        status_file = Path('gui_status.txt')
-
-        self.worktracker = worktracker(status_file, json_file)
+        self.worktracker = worktracker.worktracker()
 
         self.today_button = QtWidgets.QPushButton("time spent today")
-        self.start_button = QtWidgets.QPushButton("start tracking")
-        self.stop_button = QtWidgets.QPushButton("stop tracking")
-        self.text = QtWidgets.QLabel("Hello World",
+        self.toggle_button = QtWidgets.QPushButton("")
+        self.text = QtWidgets.QLabel("",
                                      alignment=QtCore.Qt.AlignCenter)
         self.activity = QtWidgets.QLineEdit()
         self.activity.setPlaceholderText("enter activity")
@@ -27,12 +24,25 @@ class MyWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.today_button)
         self.layout.addWidget(self.activity)
         self.layout.addWidget(self.text)
-        self.layout.addWidget(self.start_button)
-        self.layout.addWidget(self.stop_button)
+        self.layout.addWidget(self.toggle_button)
 
         self.today_button.clicked.connect(self.today)
-        self.start_button.clicked.connect(self.start_tracking)
-        self.stop_button.clicked.connect(self.stop_tracking)
+        self.toggle_button.clicked.connect(self.toggle_working)
+
+        self.set_button_text()
+
+    def is_working(self):
+        time, _ = self.worktracker.get_status()
+        if time is None:
+            return False
+        else:
+            return True
+
+    def set_button_text(self):
+        if self.is_working():
+            self.toggle_button.setText("stop")
+        else:
+            self.toggle_button.setText("start")
 
     @QtCore.Slot()
     def start_tracking(self):
@@ -49,6 +59,15 @@ class MyWidget(QtWidgets.QWidget):
     def today(self):
         ret = history.today(self.worktracker.json_file)
         self.text.setText(ret)
+
+    @QtCore.Slot()
+    def toggle_working(self):
+        if self.is_working():
+            self.stop_tracking()
+        else:
+            self.start_tracking()
+
+        self.set_button_text()
 
 
 if __name__ == "__main__":
