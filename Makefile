@@ -20,3 +20,6 @@ itch-windows:
 
 itch-linux:
 	butler push dist/worktracker/ Seebass22/simple-work-tracker:linux-cli
+
+clean:
+	rm -rf dist/ build/ *.spec
