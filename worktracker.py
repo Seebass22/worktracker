@@ -112,10 +112,10 @@ class worktracker:
         parser = argparse.ArgumentParser(description='track your work')
         group = parser.add_mutually_exclusive_group()
 
-        group.add_argument('-s', '--start', nargs='?', const='',
+        group.add_argument('--start', nargs='?', const='',
                            metavar='activity', help='start tracking')
 
-        group.add_argument('-k', '--stop', help='stop tracking',
+        group.add_argument('--stop', help='stop tracking',
                            action='store_true')
 
         group.add_argument('--status', help='display status',
@@ -159,8 +159,11 @@ class worktracker:
         elif args.merge is not None:
             merge.merge_json(self.json_file, Path(args.merge))
 
-        else:
+        elif args.status:
             print(self.status())
+
+        else:
+            parser.print_help()
 
 
 if __name__ == '__main__':
