@@ -21,5 +21,12 @@ itch-windows:
 itch-linux:
 	butler push dist/worktracker/ Seebass22/simple-work-tracker:linux-cli
 
+itch-source:
+	butler push dist/worktracker_source.zip Seebass22/simple-work-tracker:source-code
+
+archive:
+	mkdir -p dist
+	git archive --prefix=worktracker_source/ -o dist/worktracker_source.zip HEAD
+
 clean:
 	rm -rf dist/ build/ *.spec
