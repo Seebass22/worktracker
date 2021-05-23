@@ -133,6 +133,9 @@ class worktracker:
         group.add_argument('--date', help='display work done on specific date,\
                            YYYY-MM-DD format')
 
+        group.add_argument('--week', help='display work done the past 7 days',
+                           action='store_true')
+
         group.add_argument('--merge', metavar='FILE', help='merge FILE into\
                            current history file')
 
@@ -155,6 +158,9 @@ class worktracker:
 
         elif args.date is not None:
             print(history.summarize_day(self.json_file, args.date))
+
+        elif args.week:
+            print(history.week(self.json_file))
 
         elif args.merge is not None:
             merge.merge_json(self.json_file, Path(args.merge))

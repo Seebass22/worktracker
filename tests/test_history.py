@@ -59,3 +59,15 @@ def test_invalid_test_json_file():
     assert result == expected
 
     test_json_file.unlink(missing_ok=True)
+
+
+def test_summarize_days():
+    test_json_file = Path('test_multiple_days.json')
+    with test_json_file.open('w') as f:
+        f.write('{"2021-05-03": { "math": 25, "piano": 40 }, "2021-05-04": { "math": 10, "piano": 5}}')
+
+    result = history.summarize_days(test_json_file, '2021-05-04', 2)
+    expected = 'math: 35s\npiano: 45s\n\ntotal: 1m 20s'
+
+    assert result == expected
+    test_json_file.unlink(missing_ok=True)

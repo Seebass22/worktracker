@@ -24,6 +24,20 @@ def to_time_string(seconds):
     return outstring
 
 
+def format_summary(data):
+    total_seconds = 0
+
+    outstring = ''
+    for activity, seconds in data.items():
+        total_seconds += seconds
+        time_string = to_time_string(seconds)
+        outstring += f'{activity}: {time_string}\n'
+
+    total_string = to_time_string(total_seconds)
+    outstring += f'\ntotal: {total_string}'
+    return outstring
+
+
 def summarize_day(json_file, date_string):
     if json_file.exists():
         with json_file.open('r') as infile:
@@ -38,17 +52,34 @@ def summarize_day(json_file, date_string):
         return('no work')
 
     today = data[date_string]
-    total_seconds = 0
+    return format_summary(today)
 
-    outstring = ''
-    for activity, seconds in today.items():
-        total_seconds += seconds
-        time_string = to_time_string(seconds)
-        outstring += f'{activity}: {time_string}\n'
 
-    total_string = to_time_string(total_seconds)
-    outstring += f'\ntotal: {total_string}'
-    return outstring
+def summarize_days(json_file, starting_date, days):
+    if json_file.exists():
+        with json_file.open('r') as infile:
+            try:
+                data = json.load(infile)
+            except json.decoder.JSONDecodeError:
+                return('invalid json file')
+    else:
+        return('no history file')
+
+    summary_data = {}
+    date = datetime.strptime(starting_date, '%Y-%m-%d')
+
+    for i in range(days):
+        date -= timedelta(days=i)
+        date_string = date.strftime('%Y-%m-%d')
+
+        if date_string in data:
+            for activity in data[date_string].keys():
+                if activity in summary_data:
+                    summary_data[activity] += data[date_string][activity]
+                else:
+                    summary_data[activity] = data[date_string][activity]
+
+    return format_summary(summary_data)
 
 
 def today(json_file):
@@ -66,3 +97,8 @@ def days_ago(json_file, days):
     today = datetime.now()
     date = (today - timedelta(days=days)).strftime('%Y-%m-%d')
     return summarize_day(json_file, date)
+
+
+def week(json_file):
+    current_date = datetime.now().strftime('%Y-%m-%d')
+    return summarize_days(json_file, current_date, 7)
