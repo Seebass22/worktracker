@@ -69,7 +69,6 @@ def summarize_days(json_file, starting_date, days):
     date = datetime.strptime(starting_date, '%Y-%m-%d')
 
     for _ in range(days):
-        date -= timedelta(days=1)
         date_string = date.strftime('%Y-%m-%d')
 
         if date_string in data:
@@ -78,6 +77,7 @@ def summarize_days(json_file, starting_date, days):
                     summary_data[activity] += data[date_string][activity]
                 else:
                     summary_data[activity] = data[date_string][activity]
+        date -= timedelta(days=1)
 
     return format_summary(summary_data)
 
