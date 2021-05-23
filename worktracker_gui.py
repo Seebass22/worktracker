@@ -1,7 +1,6 @@
 #!/usr/bin/python
 import sys
 from PySide6 import QtCore, QtWidgets
-from pathlib import Path
 
 import worktracker
 import history
