@@ -133,6 +133,9 @@ class worktracker:
         group.add_argument('--date', help='display work done on specific date,\
                            YYYY-MM-DD format')
 
+        group.add_argument('--days', help='display work done the past X days',
+                           type=int)
+
         group.add_argument('--week', help='display work done the past 7 days',
                            action='store_true')
 
@@ -158,6 +161,9 @@ class worktracker:
 
         elif args.days_ago is not None:
             print(history.days_ago(self.json_file, args.days_ago))
+
+        elif args.days is not None:
+            print(history.days(self.json_file, args.days))
 
         elif args.date is not None:
             print(history.summarize_day(self.json_file, args.date))
