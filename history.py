@@ -102,3 +102,8 @@ def days_ago(json_file, days):
 def week(json_file):
     current_date = datetime.now().strftime('%Y-%m-%d')
     return summarize_days(json_file, current_date, 7)
+
+
+def month(json_file):
+    current_date = datetime.now().strftime('%Y-%m-%d')
+    return summarize_days(json_file, current_date, 30)
