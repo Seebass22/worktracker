@@ -114,34 +114,24 @@ class worktracker:
 
         group.add_argument('--start', nargs='?', const='',
                            metavar='activity', help='start tracking')
-
         group.add_argument('--stop', help='stop tracking',
                            action='store_true')
-
         group.add_argument('--status', help='display status',
                            action='store_true')
-
         group.add_argument('--today', help='display work done today',
                            action='store_true')
-
         group.add_argument('--yesterday', help='display work done yesterday',
                            action='store_true')
-
         group.add_argument('--days-ago', metavar='DAYS', type=int,
                            help='display work done DAYS days ago')
-
         group.add_argument('--date', help='display work done on specific date,\
                            YYYY-MM-DD format')
-
         group.add_argument('--days', help='display work done the past X days',
                            type=int)
-
         group.add_argument('--week', help='display work done the past 7 days',
                            action='store_true')
-
         group.add_argument('--month', help='display work done the past \
                            30 days', action='store_true')
-
         group.add_argument('--merge', metavar='FILE', help='merge FILE into\
                            current history file')
 
@@ -149,37 +139,26 @@ class worktracker:
 
         if args.start is not None:
             print(self.start(args.start), end='')
-
         elif args.stop:
             print(self.stop())
-
         elif args.today:
             print(history.today(self.json_file))
-
         elif args.yesterday:
             print(history.yesterday(self.json_file))
-
         elif args.days_ago is not None:
             print(history.days_ago(self.json_file, args.days_ago))
-
         elif args.days is not None:
             print(history.days(self.json_file, args.days))
-
         elif args.date is not None:
             print(history.summarize_day(self.json_file, args.date))
-
         elif args.week:
             print(history.week(self.json_file))
-
         elif args.month:
             print(history.month(self.json_file))
-
         elif args.merge is not None:
             merge.merge_json(self.json_file, Path(args.merge))
-
         elif args.status:
             print(self.status())
-
         else:
             parser.print_help()
 
