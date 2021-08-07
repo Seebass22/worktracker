@@ -27,6 +27,8 @@ class MyWidget(QtWidgets.QWidget):
         # signals
         self.today_button.clicked.connect(self.today)
         self.yesterday_button.clicked.connect(self.yesterday)
+        self.week_button.clicked.connect(self.week)
+        self.month_button.clicked.connect(self.month)
         self.toggle_button.clicked.connect(self.toggle_working)
         self.days_ago_button.clicked.connect(self.days_ago_f)
         self.date_button.clicked.connect(self.date_f)
@@ -48,6 +50,8 @@ class MyWidget(QtWidgets.QWidget):
     def setup_history_tab(self):
         self.today_button = QtWidgets.QPushButton("today")
         self.yesterday_button = QtWidgets.QPushButton("yesterday")
+        self.week_button = QtWidgets.QPushButton("past 7 days")
+        self.month_button = QtWidgets.QPushButton("past 30 days")
         self.history_text = QtWidgets.QLabel("")
 
         # days ago
@@ -76,6 +80,8 @@ class MyWidget(QtWidgets.QWidget):
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.today_button)
         layout.addWidget(self.yesterday_button)
+        layout.addWidget(self.week_button)
+        layout.addWidget(self.month_button)
         layout.addWidget(self.days_ago)
         layout.addWidget(self.date)
         layout.addWidget(self.history_text)
@@ -113,6 +119,16 @@ class MyWidget(QtWidgets.QWidget):
     @QtCore.Slot()
     def yesterday(self):
         ret = history.yesterday(self.worktracker.json_file)
+        self.history_text.setText(ret)
+
+    @QtCore.Slot()
+    def week(self):
+        ret = history.week(self.worktracker.json_file)
+        self.history_text.setText(ret)
+
+    @QtCore.Slot()
+    def month(self):
+        ret = history.month(self.worktracker.json_file)
         self.history_text.setText(ret)
 
     @QtCore.Slot()
